@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest",
+    "test:watch": "NODE_OPTIONS=--experimental-vm-modules jest --watch",
+    "test:cov": "NODE_OPTIONS=--experimental-vm-modules jest --coverage"
   },
   "keywords": [],
   "author": "",
@@ -25,9 +27,12 @@
     "@angular/compiler": "^18.2.12",
     "@angular/compiler-cli": "^18.2.12",
     "@angular/core": "^18.2.12",
+    "@types/jest": "^30.0.0",
     "@types/node": "^24.7.0",
+    "jest": "^30.2.0",
     "ng-packagr": "^20.3.0",
     "rxjs": "^7.8.1",
+    "ts-jest": "^29.4.4",
     "typescript": "^5.5.4"
   }
 }

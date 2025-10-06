@@ -1,8 +1,7 @@
 import { DataSource } from '@angular/cdk/collections';
 import { computed, signal } from '@angular/core';
-import { toObservable } from '@angular/core/rxjs-interop';
-import { Observable, of } from 'rxjs';
-import { catchError, finalize, shareReplay, take, tap } from 'rxjs/operators';
+import { Observable, of, BehaviorSubject } from 'rxjs';
+import { catchError, finalize, take, tap } from 'rxjs/operators';
 import { FetchFn, PaginatedDataSourceConfig, PaginationResult } from './model';
 
 /**
@@ -21,7 +20,7 @@ export class PaginatedDataSource<T> extends DataSource<T> {
   protected _pageSize = signal<number>(10);
   protected _totalItems = signal<number>(0);
   protected _concatData = signal<boolean>(true);
-  private readonly items$: Observable<T[]> = toObservable(this._items);
+  private readonly itemsSubject = new BehaviorSubject<T[]>([]);
 
   /** Whether a page fetch is currently in progress. */
   public readonly loading = computed(() => this._loading());
@@ -49,7 +48,7 @@ export class PaginatedDataSource<T> extends DataSource<T> {
    * and replays the latest value to late subscribers.
    */
   override connect(): Observable<T[]> {
-    return this.items$.pipe(shareReplay({ refCount: true, bufferSize: 1 }));
+    return this.itemsSubject.asObservable();
   }
 
   /**
@@ -116,6 +115,7 @@ export class PaginatedDataSource<T> extends DataSource<T> {
 
     if (!this._concatData()) {
       this._items.set([]);
+      this.itemsSubject.next([]);
     }
     const params = {
       page: this._currentPage(),
@@ -128,12 +128,14 @@ export class PaginatedDataSource<T> extends DataSource<T> {
         const nextHasMore = result.hasMore ?? false;
         const nextTotal = result.totalItems ?? 0;
 
+        let newItems: T[];
         if (this._concatData()) {
-          const currentItems = [...this._items(), ...result.items];
-          this._items.set(currentItems);
+          newItems = [...this._items(), ...result.items];
         } else {
-          this._items.set(result.items);
+          newItems = result.items;
         }
+        this._items.set(newItems);
+        this.itemsSubject.next(newItems);
 
         this._hasMore.set(nextHasMore);
         this._totalItems.set(nextTotal);
@@ -145,6 +147,7 @@ export class PaginatedDataSource<T> extends DataSource<T> {
 
   private resetPaginationState(): void {
     this._items.set([]);
+    this.itemsSubject.next([]);
     this._currentPage.set(0);
     this._hasMore.set(true);
     this._totalItems.set(0);
