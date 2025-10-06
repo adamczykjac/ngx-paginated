@@ -15,7 +15,8 @@ export class PaginatedDataSource<T> extends DataSource<T> {
   protected _loading = signal<boolean>(false);
   protected _hasMore = signal<boolean>(true);
   protected _currentPage = signal<number>(0);
-  protected _fetchFn: FetchFn<T> = () => of({ items: [], hasMore: false, totalItems: 0 });
+  protected _fetchFn: FetchFn<T> = () =>
+    of({ items: [], hasMore: false, totalItems: 0 });
   protected _query = signal<string>('');
   protected _pageSize = signal<number>(10);
   protected _totalItems = signal<number>(0);
@@ -35,7 +36,12 @@ export class PaginatedDataSource<T> extends DataSource<T> {
    */
   constructor(config: PaginatedDataSourceConfig<T>) {
     super();
-    const { fetchFn, pageSize, concatData = true, triggerInitialFetch = true } = config;
+    const {
+      fetchFn,
+      pageSize,
+      concatData = true,
+      triggerInitialFetch = true,
+    } = config;
     if (fetchFn) this._fetchFn = fetchFn;
     if (pageSize !== undefined) this._pageSize.set(pageSize);
     if (concatData !== undefined) this._concatData.set(concatData);
@@ -124,7 +130,7 @@ export class PaginatedDataSource<T> extends DataSource<T> {
     };
     return this._fetchFn(params).pipe(
       catchError(() => of({ items: [], hasMore: false, totalItems: 0 })),
-      tap(result => {
+      tap((result) => {
         const nextHasMore = result.hasMore ?? false;
         const nextTotal = result.totalItems ?? 0;
 
@@ -141,7 +147,7 @@ export class PaginatedDataSource<T> extends DataSource<T> {
         this._totalItems.set(nextTotal);
       }),
       take(1),
-      finalize(() => this._loading.set(false)),
+      finalize(() => this._loading.set(false))
     );
   }
 
@@ -153,5 +159,3 @@ export class PaginatedDataSource<T> extends DataSource<T> {
     this._totalItems.set(0);
   }
 }
-
-

@@ -18,7 +18,7 @@ export interface PaginationResult<T> {
 }
 
 export type FetchFn<T> = (
-  params: PaginationParams,
+  params: PaginationParams
 ) => Observable<PaginationResult<T>>;
 
 export type PaginatedDataSourceConfig<T> = {
@@ -27,5 +27,3 @@ export type PaginatedDataSourceConfig<T> = {
   concatData?: boolean;
   triggerInitialFetch?: boolean;
 };
-
-
