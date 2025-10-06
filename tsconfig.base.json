@@ -3,8 +3,8 @@
     "baseUrl": ".",
     "paths": {
       "@ngx-paginated/data-source": ["libs/paginated-data-source/src/index.ts"],
-      "@ngx-paginated/ui-material-autocomplete": [
-        "libs/ui/material-autocomplete/src/index.ts"
+      "@ngx-paginated/ui-paginated-dropdown": [
+        "libs/ui/paginated-dropdown/src/index.ts"
       ]
     }
   }

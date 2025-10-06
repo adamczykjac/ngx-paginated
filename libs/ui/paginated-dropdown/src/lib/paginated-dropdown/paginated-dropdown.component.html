@@ -1,10 +1,6 @@
 <mat-form-field>
   <mat-label>{{ placeholder }}</mat-label>
-  <input
-    matInput
-    [formControl]="searchControl"
-    [matAutocomplete]="auto"
-  />
+  <input matInput [formControl]="searchControl" [matAutocomplete]="auto" />
   <mat-autocomplete
     #auto="matAutocomplete"
     [displayWith]="displayWith"
@@ -21,11 +17,11 @@
       >
         {{ displayWith(item) }}
       </mat-option>
-      
+
       @if (dataSource.loading()) {
-        <mat-option disabled>
-          <span>Loading...</span>
-        </mat-option>
+      <mat-option disabled>
+        <span>Loading...</span>
+      </mat-option>
       }
     </cdk-virtual-scroll-viewport>
   </mat-autocomplete>

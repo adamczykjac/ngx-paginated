@@ -1,5 +1,5 @@
 {
-  "name": "@ngx-paginated/ui-material-autocomplete",
+  "name": "@ngx-paginated/ui-paginated-dropdown",
   "version": "0.0.1",
   "peerDependencies": {
     "@angular/common": "^20.3.0",

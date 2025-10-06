@@ -1,23 +1,23 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { UiMaterialAutocomplete } from './ui-material-autocomplete';
+import { PaginatedDropdownComponent } from './paginated-dropdown.component';
 import { of } from 'rxjs';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
-describe('UiMaterialAutocomplete', () => {
-  let component: UiMaterialAutocomplete<any>;
-  let fixture: ComponentFixture<UiMaterialAutocomplete<any>>;
+describe('PaginatedDropdownComponent', () => {
+  let component: PaginatedDropdownComponent<any>;
+  let fixture: ComponentFixture<PaginatedDropdownComponent<any>>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [UiMaterialAutocomplete, NoopAnimationsModule],
+      imports: [PaginatedDropdownComponent, NoopAnimationsModule],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(UiMaterialAutocomplete);
+    fixture = TestBed.createComponent(PaginatedDropdownComponent);
     component = fixture.componentInstance;
-    
+
     // Provide a minimal fetchFn
     component.fetchFn = () => of({ items: [], hasMore: false, totalItems: 0 });
-    
+
     fixture.detectChanges();
   });
 
@@ -33,10 +33,10 @@ describe('UiMaterialAutocomplete', () => {
   it('should call onChange when option is selected', () => {
     const spy = jest.fn();
     component.registerOnChange(spy);
-    
+
     const testItem = { id: 1, name: 'Test' };
     component.onOptionSelected(testItem);
-    
+
     expect(spy).toHaveBeenCalledWith(testItem);
   });
 });

@@ -1,6 +1,6 @@
 {
   "$schema": "../../../node_modules/ng-packagr/ng-package.schema.json",
-  "dest": "../../../dist/libs/ui/material-autocomplete",
+  "dest": "../../../dist/libs/ui/paginated-dropdown",
   "lib": {
     "entryFile": "src/index.ts"
   }

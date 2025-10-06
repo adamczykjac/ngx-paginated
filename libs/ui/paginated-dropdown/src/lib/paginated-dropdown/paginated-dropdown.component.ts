@@ -1,33 +1,44 @@
 import { Component, Input, forwardRef, OnInit, ViewChild } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl, ReactiveFormsModule } from '@angular/forms';
-import { MatAutocompleteModule, MatAutocompleteTrigger } from '@angular/material/autocomplete';
+import {
+  ControlValueAccessor,
+  NG_VALUE_ACCESSOR,
+  FormControl,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import {
+  MatAutocompleteModule,
+  MatAutocompleteTrigger,
+} from '@angular/material/autocomplete';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { PaginatedDataSource, FetchFn } from '@ngx-paginated/data-source';
 import { AsyncPipe } from '@angular/common';
-import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
+import {
+  CdkVirtualScrollViewport,
+  ScrollingModule,
+} from '@angular/cdk/scrolling';
 
 /**
- * A Material autocomplete component with paginated data loading.
- * 
+ * A Material autocomplete dropdown component with paginated data loading.
+ *
  * Features:
  * - Virtual scrolling for large lists
  * - Automatic pagination on scroll
  * - Search query support
  * - ControlValueAccessor support for reactive forms
- * 
+ *
  * @example
  * ```html
- * <lib-ui-material-autocomplete
+ * <lib-paginated-dropdown
  *   [fetchFn]="loadUsers"
  *   [displayWith]="userDisplayFn"
  *   [(ngModel)]="selectedUser"
  *   placeholder="Select a user">
- * </lib-ui-material-autocomplete>
+ * </lib-paginated-dropdown>
  * ```
  */
 @Component({
-  selector: 'lib-ui-material-autocomplete',
+  selector: 'lib-paginated-dropdown',
   standalone: true,
   imports: [
     MatAutocompleteModule,
@@ -35,19 +46,19 @@ import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrollin
     MatInputModule,
     ReactiveFormsModule,
     AsyncPipe,
-    ScrollingModule
+    ScrollingModule,
   ],
-  templateUrl: './ui-material-autocomplete.html',
-  styleUrl: './ui-material-autocomplete.css',
+  templateUrl: './paginated-dropdown.component.html',
+  styleUrl: './paginated-dropdown.component.css',
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => UiMaterialAutocomplete),
-      multi: true
-    }
-  ]
+      useExisting: forwardRef(() => PaginatedDropdownComponent),
+      multi: true,
+    },
+  ],
 })
-export class UiMaterialAutocomplete<T> implements ControlValueAccessor, OnInit {
+export class PaginatedDropdownComponent<T> implements ControlValueAccessor, OnInit {
   /**
    * Function to fetch paginated data.
    */
@@ -73,7 +84,8 @@ export class UiMaterialAutocomplete<T> implements ControlValueAccessor, OnInit {
    */
   @Input() itemHeight = 48;
 
-  @ViewChild(MatAutocompleteTrigger) autocompleteTrigger!: MatAutocompleteTrigger;
+  @ViewChild(MatAutocompleteTrigger)
+  autocompleteTrigger!: MatAutocompleteTrigger;
   @ViewChild(CdkVirtualScrollViewport) viewport!: CdkVirtualScrollViewport;
 
   searchControl = new FormControl<string>('');
@@ -87,11 +99,11 @@ export class UiMaterialAutocomplete<T> implements ControlValueAccessor, OnInit {
       fetchFn: this.fetchFn,
       pageSize: this.pageSize,
       concatData: true,
-      triggerInitialFetch: true
+      triggerInitialFetch: true,
     });
 
     // Update query on search input changes
-    this.searchControl.valueChanges.subscribe(query => {
+    this.searchControl.valueChanges.subscribe((query) => {
       this.dataSource.setQuery(query || '');
     });
   }
@@ -103,10 +115,10 @@ export class UiMaterialAutocomplete<T> implements ControlValueAccessor, OnInit {
 
   onScroll(): void {
     if (!this.viewport) return;
-    
+
     const end = this.viewport.getRenderedRange().end;
     const total = this.viewport.getDataLength();
-    
+
     // Load next page when user scrolls near the end
     if (end >= total - 5 && this.dataSource.hasMore()) {
       this.dataSource.loadNextPage();
@@ -116,7 +128,9 @@ export class UiMaterialAutocomplete<T> implements ControlValueAccessor, OnInit {
   // ControlValueAccessor implementation
   writeValue(value: T | null): void {
     if (value && this.displayWith) {
-      this.searchControl.setValue(this.displayWith(value), { emitEvent: false });
+      this.searchControl.setValue(this.displayWith(value), {
+        emitEvent: false,
+      });
     } else {
       this.searchControl.setValue('', { emitEvent: false });
     }
