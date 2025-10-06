@@ -1,0 +1,32 @@
+<mat-form-field>
+  <mat-label>{{ placeholder }}</mat-label>
+  <input
+    matInput
+    [formControl]="searchControl"
+    [matAutocomplete]="auto"
+  />
+  <mat-autocomplete
+    #auto="matAutocomplete"
+    [displayWith]="displayWith"
+    (optionSelected)="onOptionSelected($event.option.value)"
+  >
+    <cdk-virtual-scroll-viewport
+      [itemSize]="itemHeight"
+      [style.height.px]="itemHeight * 6"
+      (scrolledIndexChange)="onScroll()"
+    >
+      <mat-option
+        *cdkVirtualFor="let item of dataSource.connect() | async"
+        [value]="item"
+      >
+        {{ displayWith(item) }}
+      </mat-option>
+      
+      @if (dataSource.loading()) {
+        <mat-option disabled>
+          <span>Loading...</span>
+        </mat-option>
+      }
+    </cdk-virtual-scroll-viewport>
+  </mat-autocomplete>
+</mat-form-field>

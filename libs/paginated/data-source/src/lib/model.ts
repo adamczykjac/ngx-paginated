@@ -1,9 +1,14 @@
 import { Observable } from 'rxjs';
 
-export interface PaginationParams {
+export interface Filters {
+  filtering?: Record<string, any>;
+}
+
+export interface PaginationParams extends Filters {
   page: number;
   pageSize: number;
   query?: string;
+  sorting?: { column: string; sortingType: 'ascending' | 'descending' };
 }
 
 export interface PaginationResult<T> {
@@ -22,3 +27,5 @@ export type PaginatedDataSourceConfig<T> = {
   concatData?: boolean;
   triggerInitialFetch?: boolean;
 };
+
+

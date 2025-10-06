@@ -1,0 +1,14 @@
+{
+  "name": "@ngx-paginated/ui-material-autocomplete",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@angular/common": "^20.3.0",
+    "@angular/core": "^20.3.0",
+    "@angular/cdk": "^20.0.0",
+    "@angular/material": "^20.0.0",
+    "@angular/forms": "^20.3.0",
+    "@ngx-paginated/data-source": "^0.0.1",
+    "rxjs": "^7.8.0 || ^8"
+  },
+  "sideEffects": false
+}
