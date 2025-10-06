@@ -1,0 +1,7 @@
+{
+  "$schema": "https://ng-packagr.github.io/schema.json",
+  "dest": "dist",
+  "lib": {
+    "entryFile": "src/public-api.ts"
+  }
+}

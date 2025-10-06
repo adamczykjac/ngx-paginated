@@ -1,0 +1,17 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "declaration": true,
+    "declarationMap": true,
+    "emitDecoratorMetadata": false,
+    "experimentalDecorators": true,
+    "target": "ES2022",
+    "module": "ES2022",
+    "moduleResolution": "NodeNext",
+    "useDefineForClassFields": false,
+    "skipLibCheck": true,
+    "strict": true
+  },
+  "files": [],
+  "include": []
+}
