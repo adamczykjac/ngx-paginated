@@ -1,0 +1,41 @@
+<div class="demo-container">
+  <h1>{{ title }}</h1>
+  
+  <div class="demo-section">
+    <p>This demonstrates the Angular-Material-based <code>PaginatedDropdownComponent</code> for paginated data, including infinite scroll and search capabilities.</p>
+
+    <div class="stats">
+      <span><strong>Total:</strong> {{ dataSource.totalItems() }}</span>
+      <span><strong>Loaded:</strong> {{ dataSource.items().length }}</span>
+      <span><strong>Loading:</strong> {{ dataSource.loading() ? 'Yes' : 'No' }}</span>
+      <span><strong>Has More:</strong> {{ dataSource.hasMore() ? 'Yes' : 'No' }}</span>
+    </div>
+    
+    <form [formGroup]="form">
+      <mat-form-field appearance="fill" class="w-full">
+        <ngx-paginated-dropdown
+          noResultsText="No results found."
+          formControlName="selectedItem"
+          placeholder="Select an item"
+          [items]="selectableItems()"
+          [loading]="dataSource.loading()"
+          [hasMore]="dataSource.hasMore()"
+          (loadMore)="dataSource.loadNextPage()"
+          (searched)="dataSource.setQuery($event)">
+        </ngx-paginated-dropdown>
+      </mat-form-field>
+    </form>
+
+    <div class="selected-value">
+      @if (selectedValue) {
+        <h3>Selected Item:</h3>
+        <div class="selected-card">
+          <div><strong>ID:</strong> {{ selectedValue.id }}</div>
+          <div><strong>Label:</strong> {{ selectedValue.label }}</div>
+        </div>
+      } @else {
+        <p class="no-selection">No item selected</p>
+      }
+    </div>
+  </div>
+</div>

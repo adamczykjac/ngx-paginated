@@ -1,5 +1,5 @@
 {
-  "name": "ui-paginated-dropdown",
+  "name": "paginated-dropdown",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/ui/paginated-dropdown/src",
   "prefix": "lib",

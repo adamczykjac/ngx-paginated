@@ -1,28 +1,53 @@
-<mat-form-field>
-  <mat-label>{{ placeholder }}</mat-label>
-  <input matInput [formControl]="searchControl" [matAutocomplete]="auto" />
-  <mat-autocomplete
-    #auto="matAutocomplete"
-    [displayWith]="displayWith"
-    (optionSelected)="onOptionSelected($event.option.value)"
-  >
-    <cdk-virtual-scroll-viewport
-      [itemSize]="itemHeight"
-      [style.height.px]="itemHeight * 6"
-      (scrolledIndexChange)="onScroll()"
-    >
-      <mat-option
-        *cdkVirtualFor="let item of dataSource.connect() | async"
-        [value]="item"
-      >
-        {{ displayWith(item) }}
-      </mat-option>
-
-      @if (dataSource.loading()) {
-      <mat-option disabled>
-        <span>Loading...</span>
-      </mat-option>
-      }
-    </cdk-virtual-scroll-viewport>
-  </mat-autocomplete>
-</mat-form-field>
+<div class="dropdown-container">
+    <input
+        #inputEl
+        class="dropdown-input"
+        type="text"
+        matInput
+        [readonly]="disableSearch()"
+        [placeholder]="placeholder"
+        [matAutocomplete]="auto"
+        [formControl]="formControl"
+        #trigger="matAutocompleteTrigger"
+        role="combobox"
+        [attr.aria-expanded]="opened()"
+        [attr.aria-controls]="auto?.id" />
+    <mat-autocomplete
+        #auto="matAutocomplete"
+        (opened)="opened.set(true)"
+        (closed)="opened.set(false)"
+        [displayWith]="displayInputWith"
+        [hideSingleSelectionIndicator]="true">
+        <div class="dropdown-content">
+            <cdk-virtual-scroll-viewport
+                [style.height.px]="displayedItems().length > itemsInDropdown() ? itemsInDropdown() * itemSizePx() : displayedItems().length * itemSizePx()"
+                [itemSize]="itemSizePx()"
+                (scrolledIndexChange)="onScroll($event)">
+                <mat-option
+                    *cdkVirtualFor="let item of displayedItems(); trackBy: trackById"
+                    [value]="item"
+                    [class.mdc-list-item--selected]="item.isSelected"
+                    [disabled]="item.disabled">
+                    <div
+                        class="option-item"
+                        [class.disabled]="item.disabled"
+                        [attr.tabindex]="item.disabled ? -1 : 0"
+                        role="button">
+                        <span class="option-label">{{ item.label }}</span>
+                        @if (item.isSelected) {
+                            <mat-icon class="selected-icon">check</mat-icon>
+                        }
+                    </div>
+                </mat-option>
+            </cdk-virtual-scroll-viewport>
+            @if (loading()) {
+                <div class="loading-overlay" [style.background-color]="'rgba(255, 255, 255, 0.6)'">
+                    <mat-progress-spinner mode="indeterminate" diameter="20" />
+                </div>
+            }
+        </div>
+    </mat-autocomplete>
+    @if (loading() && !opened()) {
+        <mat-progress-spinner mode="indeterminate" diameter="20" />
+    }
+</div>

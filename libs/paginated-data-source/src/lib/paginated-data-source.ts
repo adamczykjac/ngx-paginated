@@ -23,6 +23,8 @@ export class PaginatedDataSource<T> extends DataSource<T> {
   protected _concatData = signal<boolean>(true);
   private readonly itemsSubject = new BehaviorSubject<T[]>([]);
 
+  /** Current items in the data source. */
+  public readonly items = computed(() => this._items());
   /** Whether a page fetch is currently in progress. */
   public readonly loading = computed(() => this._loading());
   /** Indicates if there are more pages to load. */

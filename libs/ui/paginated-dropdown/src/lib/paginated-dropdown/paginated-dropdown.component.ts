@@ -1,150 +1,234 @@
-import { Component, Input, forwardRef, OnInit, ViewChild } from '@angular/core';
+import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
+import { CommonModule } from '@angular/common';
 import {
-  ControlValueAccessor,
-  NG_VALUE_ACCESSOR,
-  FormControl,
-  ReactiveFormsModule,
-} from '@angular/forms';
-import {
-  MatAutocompleteModule,
-  MatAutocompleteTrigger,
-} from '@angular/material/autocomplete';
-import { MatFormFieldModule } from '@angular/material/form-field';
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  computed,
+  DestroyRef,
+  effect,
+  ElementRef,
+  inject,
+  input,
+  OnInit,
+  output,
+  signal,
+  viewChild,
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { NgControl, ReactiveFormsModule, ValidatorFn } from '@angular/forms';
+import { MatAutocompleteModule, MatAutocompleteTrigger } from '@angular/material/autocomplete';
+import { MatFormFieldControl } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { PaginatedDataSource, FetchFn } from '@ngx-paginated/data-source';
-import { AsyncPipe } from '@angular/common';
-import {
-  CdkVirtualScrollViewport,
-  ScrollingModule,
-} from '@angular/cdk/scrolling';
+import { debounceTime, distinctUntilChanged, filter, tap } from 'rxjs/operators';
+import { FormFieldDropdownBase } from './form-field.dropdown-base';
+import { LabelledSelectableItem } from '../models/display-fn';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { AutocompletePositionUtil } from './autocomplete-position.util';
+import { OverlayPositionBuilder } from '@angular/cdk/overlay';
 
-/**
- * A Material autocomplete dropdown component with paginated data loading.
- *
- * Features:
- * - Virtual scrolling for large lists
- * - Automatic pagination on scroll
- * - Search query support
- * - ControlValueAccessor support for reactive forms
- *
- * @example
- * ```html
- * <lib-paginated-dropdown
- *   [fetchFn]="loadUsers"
- *   [displayWith]="userDisplayFn"
- *   [(ngModel)]="selectedUser"
- *   placeholder="Select a user">
- * </lib-paginated-dropdown>
- * ```
- */
 @Component({
-  selector: 'lib-paginated-dropdown',
-  standalone: true,
-  imports: [
-    MatAutocompleteModule,
-    MatFormFieldModule,
-    MatInputModule,
-    ReactiveFormsModule,
-    AsyncPipe,
-    ScrollingModule,
-  ],
+  selector: 'ngx-paginated-dropdown',
   templateUrl: './paginated-dropdown.component.html',
-  styleUrl: './paginated-dropdown.component.css',
+  styleUrls: ['./paginated-dropdown.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    MatInputModule,
+    MatIconModule,
+    ScrollingModule,
+    MatAutocompleteModule,
+    ReactiveFormsModule,
+    MatProgressSpinnerModule,
+  ],
   providers: [
     {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => PaginatedDropdownComponent),
-      multi: true,
+      provide: MatFormFieldControl,
+      useExisting: PaginatedDropdownComponent,
     },
   ],
 })
-export class PaginatedDropdownComponent<T> implements ControlValueAccessor, OnInit {
-  /**
-   * Function to fetch paginated data.
-   */
-  @Input({ required: true }) fetchFn!: FetchFn<T>;
+export class PaginatedDropdownComponent<T extends LabelledSelectableItem>
+  extends FormFieldDropdownBase<T>
+  implements OnInit, AfterViewInit
+{
+  readonly loadMore = output<void>();
+  readonly searched = output<string>();
 
-  /**
-   * Function to display the selected item.
-   */
-  @Input() displayWith: (item: T) => string = (item) => String(item);
+  private positionBuilder = inject(OverlayPositionBuilder);
+  private positionUtil = new AutocompletePositionUtil(this.positionBuilder, this._elementRef);
 
-  /**
-   * Placeholder text for the input.
-   */
-  @Input() placeholder = 'Search...';
+  cdkVirtualScrollViewPort = viewChild(CdkVirtualScrollViewport);
 
-  /**
-   * Page size for pagination.
-   */
-  @Input() pageSize = 20;
+  noResultsText = input<string>('No results found.');
+  hasMore = input<boolean>(false);
+  currentPage = input<number>(1);
+  pageSize = input<number>(10);
+  scrollThreshold = input<number>(80);
+  itemSizePx = input<number>(48);
+  itemsInDropdown = input<number>(5);
+  disableSearch = input<boolean>(false);
 
-  /**
-   * Virtual scroll item height in pixels.
-   */
-  @Input() itemHeight = 48;
+  opened = signal(false);
+  previousScrollIndex = signal(0);
+  selectedValue = signal<T | null>(null);
+  itemsEnriched = computed(() => {
+    if (this.hasEmptyResults()) {
+      const noResultsItem = {
+        id: '__no_results__',
+        label: this.noResultsText(),
+        disabled: true,
+      } as T & { disabled: boolean };
+      return [noResultsItem];
+    }
 
-  @ViewChild(MatAutocompleteTrigger)
-  autocompleteTrigger!: MatAutocompleteTrigger;
-  @ViewChild(CdkVirtualScrollViewport) viewport!: CdkVirtualScrollViewport;
+    const enrichedItems = this.items().map(item => ({
+      ...item,
+      label: this.displayOptionWith?.(item) ?? item.label,
+      isSelected: item.id === this.selectedValue()?.id,
+    }));
 
-  searchControl = new FormControl<string>('');
-  dataSource!: PaginatedDataSource<T>;
+    return enrichedItems;
+  });
+  displayedItems = signal<T[]>([]);
+  hasEmptyResults = computed(() => !this.loading() && !this.items().length);
 
-  private onChange: (value: T | null) => void = () => {};
-  private onTouched: () => void = () => {};
+  readonly destroyRef = inject(DestroyRef);
+  readonly cdr = inject(ChangeDetectorRef);
+  private getFormControlDebounced$ = () =>
+    this.formControl.valueChanges.pipe(debounceTime(300), distinctUntilChanged());
+  private getSearchQuery$ = () =>
+    this.getFormControlDebounced$().pipe(
+      filter(value => typeof value === 'string'),
+      tap(value => this.onSearch(value)),
+    );
+  private originValidators: ValidatorFn | null = null;
+
+  constructor() {
+    const ngControl = inject(NgControl, { optional: true, self: true });
+    const elementRef = inject(ElementRef<HTMLElement>);
+    if (!ngControl) return;
+    super(ngControl, elementRef);
+
+    effect(() => {
+      if (!this.opened()) return;
+      this.refreshViewport();
+    });
+
+    effect(() => {
+      if (this.loading() && this.displayedItems().length) return;
+      this.displayedItems.set(this.itemsEnriched());
+    });
+
+    effect(() => {
+      const currentItems = this.items();
+      if (!currentItems.length) return;
+      if (!this.formControl) return;
+      if (!this.selectedValue()) return;
+      this.formControl.updateValueAndValidity();
+    });
+  }
 
   ngOnInit(): void {
-    this.dataSource = new PaginatedDataSource({
-      fetchFn: this.fetchFn,
-      pageSize: this.pageSize,
-      concatData: true,
-      triggerInitialFetch: true,
+    this.originValidators = this.formControl.validator;
+    this.formControl.valueChanges
+      .pipe(
+        tap(value => this.selectedValue.set(value)),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe();
+
+    this.formControl.statusChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+      this.errorState = this.formControl.invalid && this.formControl.touched;
     });
-
-    // Update query on search input changes
-    this.searchControl.valueChanges.subscribe((query) => {
-      this.dataSource.setQuery(query || '');
-    });
+    if (this.disableSearch()) return;
+    this.getSearchQuery$().pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
   }
 
-  onOptionSelected(item: T): void {
-    this.onChange(item);
-    this.onTouched();
+  private refreshViewport() {
+    if (!this.cdkVirtualScrollViewPort()) return;
+    this.cdkVirtualScrollViewPort()?.scrollToIndex(0);
+    this.cdkVirtualScrollViewPort()?.checkViewportSize();
+    this.previousScrollIndex.set(0);
   }
 
-  onScroll(): void {
-    if (!this.viewport) return;
+  onScroll(index: number): void {
+    if (!this.hasMore()) return;
+    if (this.loading()) return;
+    if (!this.displayedItems().length) return;
+    if (this.hasEmptyResults()) return;
+    const scrollingBackwards = this.previousScrollIndex() >= index;
+    if (scrollingBackwards) return;
+    this.previousScrollIndex.set(index);
+    const scrollPercentage = ((index + this.itemsInDropdown()) / this.displayedItems().length) * 100;
+    if (scrollPercentage < this.scrollThreshold()) return;
+    this.loadMore.emit();
+  }
 
-    const end = this.viewport.getRenderedRange().end;
-    const total = this.viewport.getDataLength();
+  autocompleteTrigger = viewChild(MatAutocompleteTrigger);
+  inputElRef = viewChild('inputEl', { read: ElementRef });
 
-    // Load next page when user scrolls near the end
-    if (end >= total - 5 && this.dataSource.hasMore()) {
-      this.dataSource.loadNextPage();
+  onExpand(): void {
+    if (this.formControl.disabled) {
+      return;
     }
-  }
-
-  // ControlValueAccessor implementation
-  writeValue(value: T | null): void {
-    if (value && this.displayWith) {
-      this.searchControl.setValue(this.displayWith(value), {
-        emitEvent: false,
-      });
-    } else {
-      this.searchControl.setValue('', { emitEvent: false });
+    if (this.autocompleteTrigger()?.panelOpen) {
+      this.autocompleteTrigger()?.closePanel();
+      return;
     }
+    this.inputElRef()?.nativeElement.focus();
+    // triggers outside Angular zone
+    requestAnimationFrame(() => this.autocompleteTrigger()?.openPanel());
   }
 
-  registerOnChange(fn: (value: T | null) => void): void {
-    this.onChange = fn;
+  ngAfterViewInit(): void {
+    const trigger = this.autocompleteTrigger();
+    if (!trigger) return;
+    this.positionUtil.patchTriggerPositioning(trigger);
   }
 
-  registerOnTouched(fn: () => void): void {
-    this.onTouched = fn;
+  trackById = (_: number, item: T) => item?.id;
+
+  /**
+   * Handles the selection of an item from the dropdown.
+   * CAVEAT! This is intentional overlap with what mat-option's [[optionSelected] input](https://v20.material.angular.dev/components/autocomplete/api) does,
+   * as we conciously block the default behavior of mat-option to achieve our custom selection handling, e.g. to handle multi-selection.
+   *
+   * @param item The item that was selected.
+   * @param event The mouse event triggered by the selection.
+   */
+  // onOptionSelected(item: T, event: MouseEvent): void {
+  //   event.stopPropagation();
+  //   if (!item.disabled) {
+  //     return;
+  //   }
+  //   this.formControl.setValue(item);
+  //   const trigger = this.autocompleteTrigger();
+  //   if (trigger && !trigger.panelOpen) trigger.openPanel();
+  //   this.cdr.markForCheck();
+  // }
+
+  private onSearch(query: string) {
+    // temporarily remove validators to allow search to be triggered,
+    // this is to allow search to be triggered when the form control is invalid,
+    // e.g. due to the search query that couldn't be found
+    const currentValidators = this.formControl.validator;
+    this.formControl.setValidators(this.originValidators);
+    this.formControl.updateValueAndValidity({ emitEvent: false });
+    if (query && !this.formControl.valid) {
+      this.formControl.setValidators(currentValidators);
+      this.formControl.updateValueAndValidity({ emitEvent: false });
+      return;
+    }
+    this.searched.emit(query);
+    this.formControl.setValidators(currentValidators);
+    this.formControl.updateValueAndValidity({ emitEvent: false });
   }
 
-  setDisabledState(isDisabled: boolean): void {
-    isDisabled ? this.searchControl.disable() : this.searchControl.enable();
+  override writeValue(value: T): void {
+    super.writeValue(value);
+    this.selectedValue.set(value);
   }
 }
