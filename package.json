@@ -1,18 +1,11 @@
 {
-  "name": "@bca/paginated-data-source",
+  "name": "ngx-paginated",
   "version": "0.1.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "NODE_OPTIONS=--experimental-vm-modules nx jest:test",
-    "test:watch": "NODE_OPTIONS=--experimental-vm-modules nx jest:test --watch",
-    "test:cov": "NODE_OPTIONS=--experimental-vm-modules nx jest:test --coverage"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "description": "Components and utilities for handling pagination in Angular projects.",
+  "keywords": ["angular", "material", "pagination", "data-source", "dropdown"],
+  "author": "Jacek Adamczyk",
+  "license": "MIT",
   "type": "module",
-  "module": "fesm2022/bca-paginated-data-source.mjs",
   "sideEffects": false,
   "peerDependencies": {
     "@angular/cdk": "^20",
