@@ -1,8 +1,8 @@
 export default {
-  displayName: 'ui-material-dropdown',
+  displayName: 'ui-material-autocomplete',
   preset: '../../../jest.preset.cjs',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
-  coverageDirectory: '../../../coverage/libs/ui/material-dropdown',
+  coverageDirectory: '../../../coverage/libs/ui/material-autocomplete',
   transform: {
     '^.+\\.(ts|mjs|js|html)$': [
       'jest-preset-angular',

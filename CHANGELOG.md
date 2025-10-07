@@ -21,9 +21,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Compatible with Angular CDK DataSource interface
 - Full TypeScript support with generic types
 
-#### @ngx-paginated/material-dropdown
+#### @ngx-paginated/material-autocomplete
 - Initial release
-- Material Design dropdown component
+- Material Design autocomplete component
 - Virtual scrolling using Angular CDK
 - Infinite scroll support
 - Debounced search functionality (300ms)

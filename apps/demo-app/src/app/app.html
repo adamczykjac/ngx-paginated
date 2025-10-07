@@ -2,7 +2,7 @@
   <h1>{{ title }}</h1>
   
   <div class="demo-section">
-    <p>This demonstrates the Angular-Material-based <code>PaginatedDropdownComponent</code> for paginated data, including infinite scroll and search capabilities.</p>
+    <p>This demonstrates the Angular-Material-based <code>PaginatedAutocompleteComponent</code> for paginated data, including infinite scroll and search capabilities.</p>
 
     <div class="stats">
       <span><strong>Total:</strong> {{ dataSource.totalItems() }}</span>
@@ -13,7 +13,7 @@
     
     <form [formGroup]="form">
       <mat-form-field appearance="fill" class="w-full">
-        <ngx-paginated-dropdown
+        <ngx-paginated-autocomplete
           noResultsText="No results found."
           formControlName="selectedItem"
           placeholder="Select an item"
@@ -22,7 +22,7 @@
           [hasMore]="dataSource.hasMore()"
           (loadMore)="dataSource.loadNextPage()"
           (searched)="dataSource.setQuery($event)">
-        </ngx-paginated-dropdown>
+        </ngx-paginated-autocomplete>
       </mat-form-field>
     </form>
 

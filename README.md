@@ -14,12 +14,12 @@ Core data source implementation with built-in pagination, search, and loading st
 npm install @ngx-paginated/data-source
 ```
 
-### [@ngx-paginated/material-dropdown](./libs/ui/paginated-dropdown)
+### [@ngx-paginated/material-autocomplete](./libs/ui/paginated-autocomplete)
 
-Material Design dropdown component with virtual scrolling, infinite scroll, and search capabilities. Built on top of Angular Material.
+Material Design autocomplete component with virtual scrolling, infinite scroll, and search capabilities. Built on top of Angular Material.
 
 ```bash
-npm install @ngx-paginated/material-dropdown
+npm install @ngx-paginated/material-autocomplete
 ```
 
 ## ✨ Features
@@ -38,7 +38,7 @@ npm install @ngx-paginated/material-dropdown
 ### 1. Install Dependencies
 
 ```bash
-npm install @ngx-paginated/data-source @ngx-paginated/material-dropdown
+npm install @ngx-paginated/data-source @ngx-paginated/material-autocomplete
 npm install @angular/material @angular/cdk @angular/forms
 ```
 
@@ -48,7 +48,7 @@ npm install @angular/material @angular/cdk @angular/forms
 import { Component } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { PaginatedDataSource } from '@ngx-paginated/data-source';
-import { PaginatedDropdownComponent } from '@ngx-paginated/material-dropdown';
+import { PaginatedAutocompleteComponent } from '@ngx-paginated/material-autocomplete';
 
 interface Item {
   id: string;
@@ -59,7 +59,7 @@ interface Item {
   selector: 'app-example',
   template: `
     <mat-form-field>
-      <ngx-paginated-dropdown
+      <ngx-paginated-autocomplete
         [formControl]="control"
         [items]="selectableItems()"
         [loading]="dataSource.loading()"
@@ -67,7 +67,7 @@ interface Item {
         (loadMore)="dataSource.loadNextPage()"
         (searched)="dataSource.setQuery($event)"
         placeholder="Select an item">
-      </ngx-paginated-dropdown>
+      </ngx-paginated-autocomplete>
     </mat-form-field>
   `
 })
@@ -130,14 +130,14 @@ npx nx run-many -t test
 ├── libs/
 │   ├── paginated-data-source/  # Core data source library
 │   └── ui/
-│       └── paginated-dropdown/ # Dropdown component library
+│       └── paginated-autocomplete/ # Autocomplete component library
 └── dist/                   # Build output
 ```
 
 ## 📚 Documentation
 
 - [Data Source Documentation](./libs/paginated-data-source/README.md)
-- [Dropdown Component Documentation](./libs/ui/paginated-dropdown/README.md)
+- [Autocomplete Component Documentation](./libs/ui/paginated-autocomplete/README.md)
 
 ## 🤝 Contributing
 

@@ -1,7 +1,7 @@
-<div class="dropdown-container">
+<div class="autocomplete-container">
     <input
         #inputEl
-        class="dropdown-input"
+        class="autocomplete-input"
         type="text"
         matInput
         [readonly]="disableSearch()"
@@ -18,9 +18,9 @@
         (closed)="opened.set(false)"
         [displayWith]="displayInputWith"
         [hideSingleSelectionIndicator]="true">
-        <div class="dropdown-content">
+        <div class="autocomplete-content">
             <cdk-virtual-scroll-viewport
-                [style.height.px]="displayedItems().length > itemsInDropdown() ? itemsInDropdown() * itemSizePx() : displayedItems().length * itemSizePx()"
+                [style.height.px]="displayedItems().length > itemsInAutocomplete() ? itemsInAutocomplete() * itemSizePx() : displayedItems().length * itemSizePx()"
                 [itemSize]="itemSizePx()"
                 (scrolledIndexChange)="onScroll($event)">
                 <mat-option

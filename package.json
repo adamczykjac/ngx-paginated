@@ -2,7 +2,13 @@
   "name": "ngx-paginated",
   "version": "0.0.1",
   "description": "Components and utilities for handling pagination in Angular projects.",
-  "keywords": ["angular", "material", "pagination", "data-source", "dropdown"],
+  "keywords": [
+    "angular",
+    "material",
+    "pagination",
+    "data-source",
+    "autocomplete"
+  ],
   "author": "Jacek Adamczyk",
   "license": "MIT",
   "type": "module",

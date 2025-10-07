@@ -7,8 +7,8 @@ export class AutocompletePositionUtil {
 
   /**
    * Sets custom position strategy for autocomplete overlay to attach to mat-form-field wrapper
-   * @description This is a workaround to fix the issue where the autocomplete overlay (aka dropdown panel),
-   * is not positioned correctly when placing a dropdown (that implements MatFormFieldControl) inside a MatFormField.
+   * @description This is a workaround to fix the issue where the autocomplete overlay (aka autocomplete panel),
+   * is not positioned correctly when placing a autocomplete (that implements MatFormFieldControl) inside a MatFormField.
    * @param trigger The MatAutocomplete trigger instance
    */
   setCustomPositionStrategy(trigger: MatAutocompleteTrigger): void {

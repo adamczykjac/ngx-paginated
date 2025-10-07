@@ -1,6 +1,6 @@
-# @ngx-paginated/material-dropdown
+# @ngx-paginated/material-autocomplete
 
-A feature-rich Angular Material dropdown component with virtual scrolling, infinite scroll, search, and full reactive forms integration.
+A feature-rich Angular Material autocomplete component with virtual scrolling, infinite scroll, search, and full reactive forms integration.
 
 ## Features
 
@@ -17,7 +17,7 @@ A feature-rich Angular Material dropdown component with virtual scrolling, infin
 ## Installation
 
 ```bash
-npm install @ngx-paginated/material-dropdown
+npm install @ngx-paginated/material-autocomplete
 ```
 
 ### Peer Dependencies
@@ -50,7 +50,7 @@ import { Component, computed } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { PaginatedDataSource } from '@ngx-paginated/data-source';
-import { PaginatedDropdownComponent, LabelledItem } from '@ngx-paginated/material-dropdown';
+import { PaginatedAutocompleteComponent, LabelledItem } from '@ngx-paginated/material-autocomplete';
 
 @Component({
   selector: 'app-example',
@@ -58,11 +58,11 @@ import { PaginatedDropdownComponent, LabelledItem } from '@ngx-paginated/materia
   imports: [
     ReactiveFormsModule,
     MatFormFieldModule,
-    PaginatedDropdownComponent
+    PaginatedAutocompleteComponent
   ],
   template: `
     <mat-form-field>
-      <ngx-paginated-dropdown
+      <ngx-paginated-autocomplete
         [formControl]="control"
         [items]="selectableItems()"
         [loading]="dataSource.loading()"
@@ -71,7 +71,7 @@ import { PaginatedDropdownComponent, LabelledItem } from '@ngx-paginated/materia
         (searched)="dataSource.setQuery($event)"
         placeholder="Select an item"
         noResultsText="No items found">
-      </ngx-paginated-dropdown>
+      </ngx-paginated-autocomplete>
     </mat-form-field>
   `
 })
@@ -121,7 +121,7 @@ export class FormExampleComponent {
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
   <mat-form-field>
     <mat-label>Category</mat-label>
-    <ngx-paginated-dropdown
+    <ngx-paginated-autocomplete
       formControlName="category"
       [items]="categoryItems()"
       [loading]="categoryDataSource.loading()"
@@ -129,7 +129,7 @@ export class FormExampleComponent {
       (loadMore)="categoryDataSource.loadNextPage()"
       (searched)="categoryDataSource.setQuery($event)"
       placeholder="Select category">
-    </ngx-paginated-dropdown>
+    </ngx-paginated-autocomplete>
     <mat-error *ngIf="form.get('category')?.hasError('required')">
       Category is required
     </mat-error>
@@ -159,12 +159,12 @@ export class CustomDisplayComponent {
 ```
 
 ```html
-<ngx-paginated-dropdown
+<ngx-paginated-autocomplete
   [formControl]="control"
   [items]="products()"
   [displayInputWith]="displayInput"
   [displayOptionWith]="displayOption">
-</ngx-paginated-dropdown>
+</ngx-paginated-autocomplete>
 ```
 
 ### Preselected Value
@@ -188,11 +188,11 @@ export class PreselectedComponent implements OnInit {
 ### Disable Search
 
 ```html
-<ngx-paginated-dropdown
+<ngx-paginated-autocomplete
   [formControl]="control"
   [items]="items()"
   [disableSearch]="true">
-</ngx-paginated-dropdown>
+</ngx-paginated-autocomplete>
 ```
 
 ## API Reference
@@ -207,7 +207,7 @@ export class PreselectedComponent implements OnInit {
 | `placeholder` | `string` | `''` | Input placeholder text |
 | `noResultsText` | `string` | `'No results found.'` | Text shown when no items match |
 | `pageSize` | `number` | `10` | Items per page |
-| `itemsInDropdown` | `number` | `5` | Visible items in dropdown |
+| `itemsInAutocomplete` | `number` | `5` | Visible items in autocomplete |
 | `itemSizePx` | `number` | `48` | Height of each item in pixels |
 | `scrollThreshold` | `number` | `80` | Scroll percentage to trigger loadMore |
 | `disableSearch` | `boolean` | `false` | Disable search functionality |
@@ -250,7 +250,7 @@ import { Component, computed, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { PaginatedDataSource, PaginationParams, PaginationResult } from '@ngx-paginated/data-source';
-import { PaginatedDropdownComponent, LabelledItem, LabelledSelectableItem } from '@ngx-paginated/material-dropdown';
+import { PaginatedAutocompleteComponent, LabelledItem, LabelledSelectableItem } from '@ngx-paginated/material-autocomplete';
 import { Observable, of } from 'rxjs';
 import { delay } from 'rxjs/operators';
 
@@ -260,24 +260,24 @@ import { delay } from 'rxjs/operators';
   imports: [
     ReactiveFormsModule,
     MatFormFieldModule,
-    PaginatedDropdownComponent
+    PaginatedAutocompleteComponent
   ],
   template: `
     <form [formGroup]="form">
       <mat-form-field appearance="fill">
         <mat-label>Select Item</mat-label>
-        <ngx-paginated-dropdown
+        <ngx-paginated-autocomplete
           formControlName="selectedItem"
           placeholder="Choose an item"
           noResultsText="No items found"
           [items]="selectableItems()"
           [loading]="dataSource.loading()"
           [hasMore]="dataSource.hasMore()"
-          [itemsInDropdown]="5"
+          [itemsInAutocomplete]="5"
           [scrollThreshold]="80"
           (loadMore)="dataSource.loadNextPage()"
           (searched)="dataSource.setQuery($event)">
-        </ngx-paginated-dropdown>
+        </ngx-paginated-autocomplete>
         <mat-error *ngIf="form.get('selectedItem')?.hasError('required')">
           Please select an item
         </mat-error>
@@ -360,7 +360,7 @@ The component uses Angular Material styles. You can customize it using CSS:
   }
 
   .mat-mdc-autocomplete-panel {
-    max-height: 256px !important; // Adjust dropdown height
+    max-height: 256px !important; // Adjust autocomplete height
   }
 }
 ```

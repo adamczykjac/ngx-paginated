@@ -1,11 +1,10 @@
 {
-  "name": "@ngx-paginated/material-dropdown",
+  "name": "@ngx-paginated/material-autocomplete",
   "version": "0.0.1",
-  "description": "Angular Material dropdown component with virtual scrolling, infinite scroll, and search capabilities",
+  "description": "Angular Material autocomplete component with virtual scrolling, infinite scroll, and search capabilities",
   "keywords": [
     "angular",
     "material",
-    "dropdown",
     "autocomplete",
     "virtual-scroll",
     "infinite-scroll",
@@ -22,7 +21,7 @@
   "bugs": {
     "url": "https://github.com/adamczykjac/ngx-paginated/issues"
   },
-  "homepage": "https://github.com/adamczykjac/ngx-paginated/blob/main/libs/ui/material-dropdown/README.md",
+  "homepage": "https://github.com/adamczykjac/ngx-paginated/blob/main/libs/ui/material-autocomplete/README.md",
   "peerDependencies": {
     "@angular/cdk": "^18 || ^19 || ^20",
     "@angular/common": "^18 || ^19 || ^20",

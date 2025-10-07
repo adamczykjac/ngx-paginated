@@ -23,16 +23,16 @@ import { MatFormFieldControl } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { debounceTime, distinctUntilChanged, filter, tap } from 'rxjs/operators';
-import { FormFieldDropdownBase } from './form-field.dropdown-base';
+import { FormFieldAutocompleteBase } from './form-field.autocomplete-base';
 import { LabelledSelectableItem } from '../models/display-fn';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AutocompletePositionUtil } from './autocomplete-position.util';
 import { OverlayPositionBuilder } from '@angular/cdk/overlay';
 
 @Component({
-  selector: 'ngx-paginated-dropdown',
-  templateUrl: './paginated-dropdown.component.html',
-  styleUrls: ['./paginated-dropdown.component.scss'],
+  selector: 'ngx-paginated-autocomplete',
+  templateUrl: './paginated-autocomplete.component.html',
+  styleUrls: ['./paginated-autocomplete.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
@@ -46,12 +46,12 @@ import { OverlayPositionBuilder } from '@angular/cdk/overlay';
   providers: [
     {
       provide: MatFormFieldControl,
-      useExisting: PaginatedDropdownComponent,
+      useExisting: PaginatedAutocompleteComponent,
     },
   ],
 })
-export class PaginatedDropdownComponent<T extends LabelledSelectableItem>
-  extends FormFieldDropdownBase<T>
+export class PaginatedAutocompleteComponent<T extends LabelledSelectableItem>
+  extends FormFieldAutocompleteBase<T>
   implements OnInit, AfterViewInit
 {
   readonly loadMore = output<void>();
@@ -68,7 +68,7 @@ export class PaginatedDropdownComponent<T extends LabelledSelectableItem>
   pageSize = input<number>(10);
   scrollThreshold = input<number>(80);
   itemSizePx = input<number>(48);
-  itemsInDropdown = input<number>(5);
+  itemsInAutocomplete = input<number>(5);
   disableSearch = input<boolean>(false);
 
   opened = signal(false);
@@ -162,7 +162,7 @@ export class PaginatedDropdownComponent<T extends LabelledSelectableItem>
     const scrollingBackwards = this.previousScrollIndex() >= index;
     if (scrollingBackwards) return;
     this.previousScrollIndex.set(index);
-    const scrollPercentage = ((index + this.itemsInDropdown()) / this.displayedItems().length) * 100;
+    const scrollPercentage = ((index + this.itemsInAutocomplete()) / this.displayedItems().length) * 100;
     if (scrollPercentage < this.scrollThreshold()) return;
     this.loadMore.emit();
   }
@@ -192,7 +192,7 @@ export class PaginatedDropdownComponent<T extends LabelledSelectableItem>
   trackById = (_: number, item: T) => item?.id;
 
   /**
-   * Handles the selection of an item from the dropdown.
+   * Handles the selection of an item from the autocomplete.
    * CAVEAT! This is intentional overlap with what mat-option's [[optionSelected] input](https://v20.material.angular.dev/components/autocomplete/api) does,
    * as we conciously block the default behavior of mat-option to achieve our custom selection handling, e.g. to handle multi-selection.
    *

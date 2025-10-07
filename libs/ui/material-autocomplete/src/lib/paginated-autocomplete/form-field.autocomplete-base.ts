@@ -8,7 +8,7 @@ import { DisplayFn } from '../models/display-fn';
 const DEFAULT_QUERY_KEYS = ['label'];
 
 @Directive()
-export class FormFieldDropdownBase<T extends { id: string; label: string }>
+export class FormFieldAutocompleteBase<T extends { id: string; label: string }>
   implements ControlValueAccessor, MatFormFieldControl<T>, OnDestroy
 {
   static nextId = 0;
@@ -22,9 +22,9 @@ export class FormFieldDropdownBase<T extends { id: string; label: string }>
 
   @Input() placeholder = '';
   /**
-   * The id of the dropdown.
+   * The id of the autocomplete.
    */
-  id = `ngx-dropdown-${FormFieldDropdownBase.nextId++}`;
+  id = `ngx-autocomplete-${FormFieldAutocompleteBase.nextId++}`;
   /**
    * Object keys leading to values which query should search against.
    */
@@ -43,7 +43,7 @@ export class FormFieldDropdownBase<T extends { id: string; label: string }>
   }
 
   /**
-   * Function to display the input value triggering the autocomplete dropdown.
+   * Function to display the input value triggering the autocomplete autocomplete.
    */
   @Input() displayInputWith: DisplayFn<T, null> = (value: T) => value?.label;
   /**

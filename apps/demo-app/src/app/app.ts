@@ -4,7 +4,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { PaginatedDataSource, PaginationParams, PaginationResult, FetchFn } from '@ngx-paginated/data-source';
-import { PaginatedDropdownComponent, LabelledItem, LabelledSelectableItem } from '@ngx-paginated/material-dropdown';
+import { PaginatedAutocompleteComponent, LabelledItem, LabelledSelectableItem } from '@ngx-paginated/material-autocomplete';
 import { Observable, of } from 'rxjs';
 import { delay, tap, map } from 'rxjs/operators';
 
@@ -43,14 +43,14 @@ function fetchItems(params: PaginationParams): PaginationResult<LabelledItem> {
     ReactiveFormsModule,
     MatFormFieldModule,
     MatAutocompleteModule,
-    PaginatedDropdownComponent,
+    PaginatedAutocompleteComponent,
   ],
   selector: 'app-root',
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
 export class App implements OnInit {
-  protected title = 'Angular Material Paginated Dropdown Demo';
+  protected title = 'Angular Material Paginated Autocomplete Demo';
 
   form = new FormGroup({
     selectedItem: new FormControl<LabelledSelectableItem | null>(null, [Validators.required]),
