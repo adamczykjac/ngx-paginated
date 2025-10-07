@@ -1,8 +1,30 @@
 {
   "name": "@ngx-paginated/data-source",
-  "version": "0.0.0",
+  "version": "0.0.1",
+  "description": "Reactive data source for Angular with built-in pagination, search, and loading state management",
+  "keywords": [
+    "angular",
+    "pagination",
+    "data-source",
+    "infinite-scroll",
+    "cdk",
+    "reactive",
+    "signals"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/paginated-data-source"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/paginated-data-source/issues"
+  },
+  "homepage": "https://github.com/yourusername/paginated-data-source#readme",
   "peerDependencies": {
-    "@angular/core": "^18",
+    "@angular/cdk": "^18 || ^19 || ^20",
+    "@angular/core": "^18 || ^19 || ^20",
     "rxjs": "^7.8.0 || ^8"
-  }
+  },
+  "sideEffects": false
 }
