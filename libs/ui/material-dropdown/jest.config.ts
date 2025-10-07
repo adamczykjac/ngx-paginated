@@ -1,8 +1,8 @@
 export default {
-  displayName: 'ui-paginated-dropdown',
+  displayName: 'ui-material-dropdown',
   preset: '../../../jest.preset.cjs',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
-  coverageDirectory: '../../../coverage/libs/ui/paginated-dropdown',
+  coverageDirectory: '../../../coverage/libs/ui/material-dropdown',
   transform: {
     '^.+\\.(ts|mjs|js|html)$': [
       'jest-preset-angular',

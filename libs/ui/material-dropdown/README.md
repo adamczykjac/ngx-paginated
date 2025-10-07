@@ -1,4 +1,4 @@
-# @ngx-paginated/ui-paginated-dropdown
+# @ngx-paginated/material-dropdown
 
 A feature-rich Angular Material dropdown component with virtual scrolling, infinite scroll, search, and full reactive forms integration.
 
@@ -17,7 +17,7 @@ A feature-rich Angular Material dropdown component with virtual scrolling, infin
 ## Installation
 
 ```bash
-npm install @ngx-paginated/ui-paginated-dropdown
+npm install @ngx-paginated/material-dropdown
 ```
 
 ### Peer Dependencies
@@ -50,7 +50,7 @@ import { Component, computed } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { PaginatedDataSource } from '@ngx-paginated/data-source';
-import { PaginatedDropdownComponent, LabelledItem } from '@ngx-paginated/ui-paginated-dropdown';
+import { PaginatedDropdownComponent, LabelledItem } from '@ngx-paginated/material-dropdown';
 
 @Component({
   selector: 'app-example',
@@ -250,7 +250,7 @@ import { Component, computed, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { PaginatedDataSource, PaginationParams, PaginationResult } from '@ngx-paginated/data-source';
-import { PaginatedDropdownComponent, LabelledItem, LabelledSelectableItem } from '@ngx-paginated/ui-paginated-dropdown';
+import { PaginatedDropdownComponent, LabelledItem, LabelledSelectableItem } from '@ngx-paginated/material-dropdown';
 import { Observable, of } from 'rxjs';
 import { delay } from 'rxjs/operators';
 

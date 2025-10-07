@@ -21,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Compatible with Angular CDK DataSource interface
 - Full TypeScript support with generic types
 
-#### @ngx-paginated/ui-paginated-dropdown
+#### @ngx-paginated/material-dropdown
 - Initial release
 - Material Design dropdown component
 - Virtual scrolling using Angular CDK

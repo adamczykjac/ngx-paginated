@@ -14,12 +14,12 @@ Core data source implementation with built-in pagination, search, and loading st
 npm install @ngx-paginated/data-source
 ```
 
-### [@ngx-paginated/ui-paginated-dropdown](./libs/ui/paginated-dropdown)
+### [@ngx-paginated/material-dropdown](./libs/ui/paginated-dropdown)
 
 Material Design dropdown component with virtual scrolling, infinite scroll, and search capabilities. Built on top of Angular Material.
 
 ```bash
-npm install @ngx-paginated/ui-paginated-dropdown
+npm install @ngx-paginated/material-dropdown
 ```
 
 ## ✨ Features
@@ -38,7 +38,7 @@ npm install @ngx-paginated/ui-paginated-dropdown
 ### 1. Install Dependencies
 
 ```bash
-npm install @ngx-paginated/data-source @ngx-paginated/ui-paginated-dropdown
+npm install @ngx-paginated/data-source @ngx-paginated/material-dropdown
 npm install @angular/material @angular/cdk @angular/forms
 ```
 
@@ -48,7 +48,7 @@ npm install @angular/material @angular/cdk @angular/forms
 import { Component } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { PaginatedDataSource } from '@ngx-paginated/data-source';
-import { PaginatedDropdownComponent } from '@ngx-paginated/ui-paginated-dropdown';
+import { PaginatedDropdownComponent } from '@ngx-paginated/material-dropdown';
 
 interface Item {
   id: string;

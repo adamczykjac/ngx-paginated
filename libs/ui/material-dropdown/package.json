@@ -1,5 +1,5 @@
 {
-  "name": "@ngx-paginated/ui-paginated-dropdown",
+  "name": "@ngx-paginated/material-dropdown",
   "version": "0.0.1",
   "description": "Angular Material dropdown component with virtual scrolling, infinite scroll, and search capabilities",
   "keywords": [
@@ -17,12 +17,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/paginated-data-source"
+    "url": "https://github.com/adamczykjac/ngx-paginated"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/paginated-data-source/issues"
+    "url": "https://github.com/adamczykjac/ngx-paginated/issues"
   },
-  "homepage": "https://github.com/yourusername/paginated-data-source#readme",
+  "homepage": "https://github.com/adamczykjac/ngx-paginated/blob/main/libs/ui/material-dropdown/README.md",
   "peerDependencies": {
     "@angular/cdk": "^18 || ^19 || ^20",
     "@angular/common": "^18 || ^19 || ^20",
